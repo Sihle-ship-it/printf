@@ -23,10 +23,8 @@ int print_percent(va_list args);
 int (*get_func(char x))(va_list args);
 int print_binary(unsigned int n);
 int my_printf(const char *format, ...);
-int print_unsigned(va_list types, char buffer[], int flags, int width, int precision, int size);
-int print_octal(va_list types, char buffer[], int flags, int width, int precision, int size);
-int print_hexadecimal(va_list types, char buffer[], int flags, int width, int precision, int size);
-int print_hexa_upper(va_list types, char buffer[], int flags, int width, int precision, int size);
-int print_hexa(va_list types, char map_to[], char buffer[], int flags, char flag_ch, int width, int precision, int size);
+int print_u(unsigned int n, int base, int is_uppercase);
+int print_o(unsigned int n);
+int print_x(unsigned int n, int is_uppercase);
 
 #endif
