@@ -1,93 +1,52 @@
 #include <stdarg.h>
-#include <unistd.h>
-#include "main.h"
+#include <stdio.h>
 #include <stdlib.h>
-
+#include "main.h"
+#include <stddef.h>
 /**
- * _printf - prints any chars or strings given
- * @format: input string
- * Description: prints input string, unless special characters are found,
- * in which case, it prints string or char arguments
- * Return: total number of characters printed
+ * _printf - recreates the printf function
+ * @format: string with format specifier
+ * Return: number of characters printed
  */
-
 int _printf(const char *format, ...)
 {
-	va_list ap;
-
-	int i, x, sum = 0;
-	char *string, c;
-
-	c = 0;
-	string = 0;
-
-	va_start(ap, format);
-
-	if (format == NULL)
+	if (format != NULL)
 	{
-		va_end(ap);
-		return (-1);
-	}
+		int count = 0, i;
+		int (*m)(va_list);
+		va_list args;
 
-	for (i = 0; format[i] != '\0'; i++)
-	{
-		if (format[i] != '%')
+		va_start(args, format);
+		i = 0;
+		if (format[0] == '%' && format[1] == '\0')
+			return (-1);
+		while (format != NULL && format[i] != '\0')
 		{
-			write(1, &format[i], sizeof(char));
-			sum++;
-		}
-		else
-		{
-			switch (format[i + 1])
+			if (format[i] == '%')
 			{
-			case '%':
-				write(1, "%", sizeof(char));
-				i++;
-				sum++;
-				break;
-			case 'c':
-				c = va_arg(ap, int);
-				sum += _ch(c);
-				i++;
-				break;
-			case 's':
-				string = va_arg(ap, char *);
-				if (string == NULL)
+				if (format[i + 1] == '%')
 				{
-					string = "(null)";
-				}
-				sum += _str(string);
-				i++;
-				break;
-			case 'i':
-			case 'd':
-				x = va_arg(ap, int);
-				sum += _num(x);
-				i++;
-				break;
-			case ' ':
-				return (-1);
-			case '\0':
-				if ((i - 1) > 0)
-				{
-					write(1, "%", sizeof(char));
-					i++;
-					sum++;
+					count += _putchar(format[i]);
+					i += 2;
 				}
 				else
 				{
-					va_end(ap);
-					return (-1);
+					m = get_func(format[i + 1]);
+					if (m)
+						count += m(args);
+					else
+						count = _putchar(format[i]) + _putchar(format[i + 1]);
+					i += 2;
 				}
-			default:
-				write(1, "%", sizeof(char));
-				sum++;
-				break;
+			}
+			else
+			{
+				count += _putchar(format[i]);
+				i++;
 			}
 		}
+		va_end(args);
+		return (count);
 	}
-
-	va_end(ap);
-
-	return (sum);
+	return (-1);
 }
