@@ -31,12 +31,12 @@ return (count);
 }
 
 /**
-* _printf - Custom printf function
+* my_printf - Custom printf function
 * @format: format string
 *
 * Return: Number of characters printed
 */
-int _printf(const char *format, ...)
+int my_printf(const char *format, ...)
 {
 va_list args;
 int count = 0;
